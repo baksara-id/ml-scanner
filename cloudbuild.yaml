@@ -1,0 +1,37 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-southeast2-docker.pkg.dev/testing-baksara/python-api/python-api',
+        '.',
+      ]
+
+  # Push the Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-southeast2-docker.pkg.dev/testing-baksara/python-api/python-api',
+      ]
+
+  # Configure Docker for Artifact Registry using gcloud
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['auth', 'configure-docker', 'asia-southeast2-docker.pkg.dev']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      [
+        'run',
+        'deploy',
+        'python-api',
+        '--image',
+        'asia-southeast2-docker.pkg.dev/testing-baksara/python-api/python-api',
+        '--platform',
+        'managed',
+        '--region',
+        'asia-southeast2',
+      ]
