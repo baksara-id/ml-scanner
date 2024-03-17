@@ -126,7 +126,7 @@ class Scanner(Resource):
         # Convert Grayscale into Binary Image
         # _, threshold_image = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY_INV)
         # chenge threshold into adaptive gaussian threshold
-        _, threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+        threshold_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
         
         # Negative transformation    
         binary_image = cv2.bitwise_not(threshold_image)
@@ -411,7 +411,9 @@ class Scanner(Resource):
             bottom = 80
             top = 255
 
-            _, binary_image = cv2.threshold(gray_image, bottom, top, cv2.THRESH_BINARY)
+            # _, binary_image = cv2.threshold(gray_image, bottom, top, cv2.THRESH_BINARY)
+            # kode diatas diganti dengan adaptive gaussian thresholding
+            binary_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
             image = binary_image
             image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
         except Exception as e:

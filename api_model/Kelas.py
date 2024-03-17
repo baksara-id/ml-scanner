@@ -107,7 +107,9 @@ class Kelas(Resource):
             return response
 
         gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
-        _, binary_image = cv2.threshold(gray_image, 250, 255, cv2.THRESH_BINARY_INV)
+        # _, binary_image = cv2.threshold(gray_image, 250, 255, cv2.THRESH_BINARY_INV)
+        # ubah kode diatas menjadi adaptive threshold
+        binary_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
 
         image = self.fit_image(binary_image, 10)
         
