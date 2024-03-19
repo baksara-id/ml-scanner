@@ -93,6 +93,12 @@ class Kelas(Resource):
         file = request.files['image']
         class_input = request.form['actual_class']
 
+        if class_input in BaksaraConst.TheBypass:
+            response = {
+                'class': class_input,
+                'prob': '1.0'
+            }
+            return response
         #find actual_class index in 2D array
         # the array is in self.class_names
         model_class_idx = -1  # Inisialisasi dengan nilai default
@@ -114,18 +120,6 @@ class Kelas(Resource):
         _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
         image = self.fit_image(binary_image, 10)
-        
-        # try:
-        #     maxclass_prob, maxclass_name = self.prep_predict_debug(image)
-        #     maxclass_res = maxclass_name + ' with value ' + str(maxclass_prob)
-        #     response = {
-        #         'class': class_input,
-        #         'prob': maxclass_res
-        #     }
-        #     return response
-        # except:
-        #     response = { "error" : f"An error occurred: {str(e)}"}
-        #     return response
 
 
         try:
@@ -172,8 +166,6 @@ class Kelas(Resource):
         return pred, sorted_ranks
 
     def rules(self, pred, sorted_rank, class_input, model_index=0 ):
-        if class_input in BaksaraConst.TheBypass:
-            return 1.0
         res = []
         res.append(self.take_class(pred, sorted_rank, class_input, model_index=model_index))
         highest_tuple = max(res, key=lambda x: x[1])
