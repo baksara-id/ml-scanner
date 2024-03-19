@@ -30,6 +30,7 @@ class Kelas(Resource):
         # Edge detection using Canny edge detector
         # convert the image into grayscale
         imagez = cv2.cvtColor(imagez, cv2.COLOR_BGR2GRAY)
+        imagez = imagez.astype(np.uint8)
         edges = cv2.Canny(imagez, 100, 200)
 
         # Find contours in the edge-detected image
