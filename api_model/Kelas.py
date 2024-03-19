@@ -12,6 +12,7 @@ class Kelas(Resource):
     def __init__(self):
         self.class_names = BaksaraConst.CLASS_NAMES4
         self.final_model = BaksaraConst.MODELS
+        self.bypass_class = BaksaraConst.TheBypass
         print(f"All Classses: {self.class_names}")
 
     def prep_predict_debug(self, image):
@@ -93,7 +94,7 @@ class Kelas(Resource):
         file = request.files['image']
         class_input = request.form['actual_class']
 
-        if class_input in BaksaraConst.TheBypass:
+        if class_input in self.bypass_class:
             response = {
                 'class': class_input,
                 'prob': '1.0'
