@@ -26,11 +26,8 @@ class Kelas(Resource):
         names = self.class_names[max_index]
         return prob, names
 
-    def fit_image(self, imagez=None, def_offset=10, canvas_size=128):
+    def fit_image(self,imagez=None, def_offset=10, canvas_size=128):
         # Edge detection using Canny edge detector
-        # convert the image into grayscale
-        imagez = cv2.cvtColor(imagez, cv2.COLOR_BGR2GRAY)
-        imagez = imagez.astype(np.uint8)
         edges = cv2.Canny(imagez, 100, 200)
 
         # Find contours in the edge-detected image
@@ -154,7 +151,7 @@ class Kelas(Resource):
             # ubah kode diatas menjadi adaptive threshold
             _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
-            image = self.fit_image(imagez = binary_image, def_offset=10, canvas_size=128)
+            image = self.fit_image(imagez = binary_image,def_offset=10, canvas_size=128)
             # baru ditambahkan
 
             predku, sorted_ranku = self.prep_predict(image, model_index=model_class_idx)
@@ -204,5 +201,4 @@ class Kelas(Resource):
         res.append(self.take_class(pred, sorted_rank, class_input, model_index=model_index))
         highest_tuple = max(res, key=lambda x: x[1])
         return highest_tuple[1]
-
 
