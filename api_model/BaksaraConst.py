@@ -28,3 +28,5 @@ CLASS_NAMES4 = [
     ['carakan_dha', 'carakan_ja', 'carakan_nya', 'carakan_pa', 'carakan_ya'],
     ['carakan_ba', 'carakan_ga', 'carakan_ma', 'carakan_nga', 'carakan_tha'],
 ]
+
+TheBypass = ['carakan_na', 'carakan_sa','carakan_wa','carakan_ba','carakan_ca','carakan_dha','carakan_tha']

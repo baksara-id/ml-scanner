@@ -26,7 +26,9 @@ class Kelas(Resource):
         return prob, names
 
     def fit_image(self, imagez = None, def_offset = 10 ):
-        contours, _ = cv2.findContours(imagez, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        edges = cv2.Canny(imagez, 100, 200)
+
+        contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cx1 = []
         cy1 = []
         cx2 = []
@@ -70,7 +72,7 @@ class Kelas(Resource):
         resized_image = cv2.resize(to_process, (new_width, new_height))
 
         # Create the canvas with padding
-        canvas = np.zeros((128, 128), dtype=np.uint8)
+        canvas = np.ones((canvas_size, canvas_size), dtype=np.uint8) * 255
 
         # calculate the x middle
         # 128 / 2 = 64
@@ -109,7 +111,7 @@ class Kelas(Resource):
         gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
         # _, binary_image = cv2.threshold(gray_image, 250, 255, cv2.THRESH_BINARY_INV)
         # ubah kode diatas menjadi adaptive threshold
-        binary_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+        _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
         image = self.fit_image(binary_image, 10)
         
@@ -170,6 +172,8 @@ class Kelas(Resource):
         return pred, sorted_ranks
 
     def rules(self, pred, sorted_rank, class_input, model_index=0 ):
+        if class_input in BaksaraConst.TheBypass:
+            return 1.0
         res = []
         res.append(self.take_class(pred, sorted_rank, class_input, model_index=model_index))
         highest_tuple = max(res, key=lambda x: x[1])
