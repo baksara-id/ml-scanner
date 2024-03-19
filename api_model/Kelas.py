@@ -151,7 +151,7 @@ class Kelas(Resource):
             # ubah kode diatas menjadi adaptive threshold
             _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
-            image = self.fit_image(image = binary_image,default_offset=10, canvas_size=128)
+            image = self.fit_image(imagez = binary_image,def_offset=10, canvas_size=128)
             # baru ditambahkan
 
             predku, sorted_ranku = self.prep_predict(image, model_index=model_class_idx)
