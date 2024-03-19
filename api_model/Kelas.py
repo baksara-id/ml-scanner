@@ -94,12 +94,6 @@ class Kelas(Resource):
         file = request.files['image']
         class_input = request.form['actual_class']
 
-        if class_input in self.bypass_class:
-            response = {
-                'class': class_input,
-                'prob': '1.0'
-            }
-            return response
         #find actual_class index in 2D array
         # the array is in self.class_names
         model_class_idx = -1  # Inisialisasi dengan nilai default
@@ -167,6 +161,8 @@ class Kelas(Resource):
         return pred, sorted_ranks
 
     def rules(self, pred, sorted_rank, class_input, model_index=0 ):
+        if class_input in self.bypass_class:
+            return 1.0
         res = []
         res.append(self.take_class(pred, sorted_rank, class_input, model_index=model_index))
         highest_tuple = max(res, key=lambda x: x[1])
