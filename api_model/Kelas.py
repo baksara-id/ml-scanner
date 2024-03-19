@@ -103,7 +103,7 @@ class Kelas(Resource):
         #find actual_class index in 2D array
         # the array is in self.class_names
         model_class_idx = -1  # Inisialisasi dengan nilai default
-        
+
         for i, sublist in enumerate(self.class_names):
             if class_input in sublist:
                 model_class_idx = i
@@ -115,15 +115,16 @@ class Kelas(Resource):
             }
             return response
 
-        gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
-        # _, binary_image = cv2.threshold(gray_image, 250, 255, cv2.THRESH_BINARY_INV)
-        # ubah kode diatas menjadi adaptive threshold
-        _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-
-        image = self.fit_image(binary_image, 10)
-
 
         try:
+            gray_image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+            # _, binary_image = cv2.threshold(gray_image, 250, 255, cv2.THRESH_BINARY_INV)
+            # ubah kode diatas menjadi adaptive threshold
+            _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+            image = self.fit_image(binary_image, 10)
+            # baru ditambahkan
+
             predku, sorted_ranku = self.prep_predict(image, model_index=model_class_idx)
             response_class = class_input
             response_prob = self.rules(predku, sorted_ranku, class_input, model_index=model_class_idx)
