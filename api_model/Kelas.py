@@ -26,10 +26,16 @@ class Kelas(Resource):
         names = self.class_names[max_index]
         return prob, names
 
-    def fit_image(self, imagez = None, def_offset = 10 ):
+    def fit_image(imagez=None, def_offset=10, canvas_size=128):
+        # Edge detection using Canny edge detector
         edges = cv2.Canny(imagez, 100, 200)
 
+        # Find contours in the edge-detected image
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Draw bounding boxes on the original image
+        # image_with_boxes = cv2.cvtColor(imagez, cv2.COLOR_GRAY2RGB)
+        
         cx1 = []
         cy1 = []
         cx2 = []
@@ -42,14 +48,21 @@ class Kelas(Resource):
             cx2.append(x+w)
             cy2.append(y+h)
             # Draw a rectangle around the contour
-            # cv2.rectangle(image_with_rectangles, (x, y), (x+w, y+h), (255, 255, 0), 2)
 
         myx1 = min(cx1)
         myy1 = min(cy1)
         myx2 = max(cx2)
         myy2 = max(cy2)
-        # cv2.rectangle(image_with_rectangles, (myx1, myy1), (myx2, myy2), (0, 255, 0), 2)
-        # Read the image to be processed
+        # cv2.rectangle(image_with_boxes, (myx1, myy1), (myx2, myy2), (255, 255, 0), 2)
+
+        # Display the original image with bounding boxes
+        # plt.figure(figsize=(15, 5))
+        # plt.subplot(141)
+        # plt.imshow(image_with_boxes)
+        # plt.title('Original Image with Bounding Boxes')
+        # plt.axis('on')
+
+        # Extract the region of interest (ROI) from the input image based on the largest bounding box
         to_process = imagez[myy1:myy2, myx1:myx2]
 
         # Calculate the new size with aspect ratio preserved
@@ -82,6 +95,22 @@ class Kelas(Resource):
         canvas[y_start:y_start+new_height, x_start:x_start+new_width] = resized_image
         canvas = cv2.bitwise_not(canvas)
         canvas = cv2.cvtColor(canvas, cv2.COLOR_GRAY2RGB)
+
+        # Display the intermediate steps if requested
+        # if show_steps:
+        #     plt.subplot(142)
+        #     plt.imshow(to_process, cmap='gray')
+        #     plt.title('Edge-detected Image')
+        #     plt.axis('on')
+
+        #     plt.subplot(143)
+        #     plt.imshow(canvas, cmap='gray')
+        #     plt.title('Image after Resizing and Padding')
+        #     plt.axis('on')
+
+        #     plt.tight_layout()
+        #     plt.show()
+
         return canvas
 
     def post(self):
