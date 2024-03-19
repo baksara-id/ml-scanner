@@ -26,7 +26,7 @@ class Kelas(Resource):
         names = self.class_names[max_index]
         return prob, names
 
-    def fit_image(imagez=None, def_offset=10, canvas_size=128):
+    def fit_image(self,imagez=None, def_offset=10, canvas_size=128):
         # Edge detection using Canny edge detector
         edges = cv2.Canny(imagez, 100, 200)
 
