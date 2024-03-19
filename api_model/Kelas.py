@@ -28,6 +28,8 @@ class Kelas(Resource):
 
     def fit_image(self,imagez=None, def_offset=10, canvas_size=128):
         # Edge detection using Canny edge detector
+        # convert the image into grayscale
+        imagez = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         edges = cv2.Canny(imagez, 100, 200)
 
         # Find contours in the edge-detected image
